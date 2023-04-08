@@ -17,6 +17,28 @@ code {
   justify-content: space-between;
 } */
 
+.top-menu-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: auto;
+  height: 64px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.logo {
+  width: 5%;
+}
+
+.top-menu-middle-divider {
+  width: 50%;
+}
+
+.top-menu {
+  width: 40%;
+}
+
 #components-layout-demo-top-side-2 .logo {
   float: left;
   width: 120px;
@@ -29,3 +51,20 @@ code {
   float: right;
   margin: 16px 0 16px 24px;
 }
+
+/* // Small devices (landscape phones, 576px and above till next break point) */
+@media (min-width: 576px) {
+}
+
+/* // Large devices (desktops, 992px and above till next break point) */
+@media (min-width: 992px) {
+}
+
+@media (min-width: 992px) {
+}
+
+/*  For desktop */
+
+/* For Tablet */
+
+/* For Mobile */
