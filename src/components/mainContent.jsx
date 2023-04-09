@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { Layout, Breadcrumb, Spin, Empty } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-
 import axios from "axios";
 
 const { Content } = Layout;

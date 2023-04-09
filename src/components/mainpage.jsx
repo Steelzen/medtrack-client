@@ -1,3 +1,10 @@
+import {
+  BrowserRouter as Router,
+  redirect,
+  Route,
+  Routes,
+  Link,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Layout, Menu, theme } from "antd";
 import {
@@ -9,6 +16,7 @@ import {
   NotificationOutlined,
 } from "@ant-design/icons";
 import MainContent from "./mainContent";
+import Advice from "./advice";
 
 const { Header, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -61,7 +69,7 @@ const MainPage = () => {
               <Menu.Item key="6">Bill</Menu.Item>
             </SubMenu>
             <Menu.Item key="7" icon={<FileOutlined />}>
-              Advice
+              <Link to="/advice">Advice</Link>
             </Menu.Item>
             <Menu.Item key="8" icon={<NotificationOutlined />}>
               Communication
@@ -69,7 +77,10 @@ const MainPage = () => {
           </Menu>
         </Sider>
         <Layout className="site-layout">
-          <MainContent />
+          <Routes>
+            <Route exact path="/" element={<MainContent />} />
+            <Route path="/advice" element={<Advice />} />
+          </Routes>
           <Footer style={{ textAlign: "center" }}>
             ©2023 Created by Taehyung Kwon
           </Footer>
