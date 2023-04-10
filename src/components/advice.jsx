@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { Form, Button } from "react-bootstrap";
 import callOpenAI from "./callOpenAI";
 
 const Advice = () => {
@@ -8,7 +9,7 @@ const Advice = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const prompt = `I am an AI language model trained on a wide range of medical information. While I am not a doctor and cannot provide personalized medical advice, I can offer general information about "${input}". Please consult a medical professional for personalized advice.`;
+    const prompt = `Can you provide information on the symptoms and treatment options for "${input}"?`;
 
     const response = await callOpenAI(prompt, {
       temperature: 0.7,
@@ -21,20 +22,23 @@ const Advice = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Contents:
-          <input
+    <div className="container mt-5">
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId="formSymptoms">
+          <Form.Label>Symptoms:</Form.Label>
+          <Form.Control
             type="text"
+            placeholder="Enter symptoms"
             value={input}
             onChange={(e) => setInput(e.target.value)}
           />
-        </label>
-        <button type="submit">Enter</button>
-      </form>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Enter
+        </Button>
+      </Form>
       {output && (
-        <div>
+        <div className="mt-5">
           <h3>Advice:</h3>
           <p>{output}</p>
         </div>
