@@ -52,6 +52,25 @@ code {
   margin: 16px 0 16px 24px;
 }
 
+.question-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: auto;
+  height: 64px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.output-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding: auto;
+  border-bottom: 1px solid #f0f0f0;
+}
+
 /* // Small devices (landscape phones, 576px and above till next break point) */
 @media (min-width: 576px) {
 }
