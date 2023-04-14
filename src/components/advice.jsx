@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import InputGroup from "react-bootstrap/InputGroup";
 import { Spin } from "antd";
-import { QuestionCircleOutlined, QuestionOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, CheckCircleOutlined } from "@ant-design/icons";
 import callOpenAI from "./callOpenAI";
 
 const Advice = () => {
@@ -33,45 +31,62 @@ const Advice = () => {
 
   return (
     <div className="container mt-5">
+      <div className="advice-title-container">
+        <h1 className="advice-title">Advice</h1>
+        <p className="advice-intro">
+          AI powered medical advice. Try to input your symptoms, AI will help
+          you.
+        </p>
+      </div>
       <div className="question-container">
         {input && (
-          <div className="mt-5">
-            <p>
-              {" "}
-              <QuestionOutlined />
-              {input}
-            </p>
+          <div className="mt-5 input-generated-wrapper">
+            <h4>
+              <QuestionCircleOutlined />
+            </h4>
+            <div className="mt-3">
+              <p>{input}</p>
+            </div>
           </div>
         )}
       </div>
       <div className="output-container">
         {loading ? (
-          <div className="mt-5 text-center">
+          <div className="mt-5 text-center spin-output-wrapper">
             <Spin />
           </div>
         ) : (
           output && (
-            <div className="mt-5">
-              <h3>Advice:</h3>
-              <p>{output}</p>
+            <div className="mt-5 output-generated-wrapper">
+              <h4>
+                <CheckCircleOutlined />
+              </h4>
+              <div className="mt-3">
+                <p>{output}</p>
+              </div>
             </div>
           )
         )}
       </div>
-      <Form onSubmit={handleSubmit}>
-        <Form.Group controlId="formSymptoms">
-          <Form.Label>Symptoms:</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Send your symptoms"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit">
-          Enter
-        </Button>
-      </Form>
+      <div className="openai-query-container">
+        <Form onSubmit={handleSubmit}>
+          <InputGroup className="mb-3">
+            <Form.Control
+              type="text"
+              placeholder="Send your symptoms"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+            />
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              type="submit"
+            >
+              Enter
+            </Button>
+          </InputGroup>
+        </Form>
+      </div>
     </div>
   );
 };

@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+p {
+  text-align: left;
+  font-size: 12;
+}
+
 /* .site-layout-background {
   display: flex;
   justify-content: space-between;
@@ -52,13 +57,36 @@ code {
   margin: 16px 0 16px 24px;
 }
 
+/* Advice page */
+.advice-title-container {
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  margin: 20px;
+  text-align: center;
+}
+
+.advice-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.advice-intro {
+  font-size: 18px;
+  margin: 0;
+}
+
+.openai-query-container {
+  margin-top: 10px;
+}
+
 .question-container {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
   background-color: #fff;
+  padding-left: 10px;
   padding: auto;
-  height: 64px;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -67,8 +95,28 @@ code {
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
+  padding-left: 10px;
   padding: auto;
   border-bottom: 1px solid #f0f0f0;
+}
+
+.input-generated-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.input-generated-wrapper > div {
+  margin: 0 10px;
+}
+
+.output-generated-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.output-generated-wrapper > div {
+  margin: 0 10px;
 }
 
 /* // Small devices (landscape phones, 576px and above till next break point) */
