@@ -34,8 +34,8 @@ const Advice = () => {
       <div className="advice-title-container">
         <h1 className="advice-title">Advice</h1>
         <p className="advice-intro">
-          AI powered medical advice. Try to input your symptoms, AI will help
-          you.
+          AI powered medical advice. Input your symptoms, AI will help you
+          before getting touch doctor.
         </p>
       </div>
       <div className="question-container">
