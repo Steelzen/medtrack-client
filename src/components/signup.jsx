@@ -51,13 +51,12 @@ const SignUp = ({ db }) => {
       const uid = user.uid;
       const group = "medistaff";
       const document_id = email;
-      //   const document_id = Math.floor(Math.random() * 1000000).toString();
 
-      console.log(uid);
+      // Get the CSRF token from the cookie
+      const csrftoken = getCookie("csrftoken");
 
-      const csrftoken = getCookie("csrftoken"); // Get the CSRF token from the cookie
-
-      axios.defaults.headers.common["X-CSRFToken"] = csrftoken; // Add the CSRF token to the axios headers
+      // Add the CSRF token to the axios headers
+      axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
 
       const options = {
         headers: {
@@ -68,7 +67,7 @@ const SignUp = ({ db }) => {
 
       // Add the user's license number to the "add_medistaff" endpoint
       const endpoint = `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/`;
-      await axios.post(endpoint, options);
+      await axios.post(endpoint, {}, options);
 
       // After create user and automatically sign in
       await signInWithEmailAndPassword(auth, email, password)
