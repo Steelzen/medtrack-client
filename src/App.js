@@ -6,8 +6,8 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import MainPage from "./components/mainpage";
-import SignUp from "./components/signup";
+import MainPage from "./pages/mainpage";
+import SignUp from "./pages/signup";
 
 import { unstable_mockFirebase } from "@firebase/rules-unit-testing";
 import firebase from "firebase/compat/app";

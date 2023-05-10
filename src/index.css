@@ -17,11 +17,6 @@ p {
   font-size: 12;
 }
 
-/* .site-layout-background {
-  display: flex;
-  justify-content: space-between;
-} */
-
 .top-menu-wrapper {
   display: flex;
   justify-content: space-between;
@@ -124,9 +119,6 @@ p {
 }
 
 /* // Large devices (desktops, 992px and above till next break point) */
-@media (min-width: 992px) {
-}
-
 @media (min-width: 992px) {
 }
 

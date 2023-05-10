@@ -7,7 +7,7 @@ import { Form, Button } from "react-bootstrap";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import validator from "validator";
-import getCookie from "./getCookie";
+import getCookie from "../components/getCookie";
 import axios from "axios";
 
 const SignUp = ({ db }) => {

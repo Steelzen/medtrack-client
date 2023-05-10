@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputGroup from "react-bootstrap/InputGroup";
 import { Spin } from "antd";
@@ -9,6 +9,8 @@ const Advice = () => {
   const [input, setInput] = useState("");
   const [output, setOutput] = useState("");
   const [loading, setLoading] = useState(false);
+
+  let inputRef = useRef(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ const Advice = () => {
     if (response) {
       setOutput(response.trim());
     }
+
+    inputRef.current = input;
   };
 
   return (
@@ -39,13 +43,13 @@ const Advice = () => {
         </p>
       </div>
       <div className="question-container">
-        {input && (
+        {inputRef && (
           <div className="mt-5 input-generated-wrapper">
             <h4>
               <QuestionCircleOutlined />
             </h4>
             <div className="mt-3">
-              <p>{input}</p>
+              <p>{inputRef.current}</p>
             </div>
           </div>
         )}

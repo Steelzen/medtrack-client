@@ -15,8 +15,8 @@ import {
   UserOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
-import MainContent from "./mainContent";
-import Advice from "./advice";
+import MainContent from "../components/mainContent";
+import Advice from "../components/advice";
 
 const { Header, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
