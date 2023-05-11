@@ -6,7 +6,7 @@ import {
   Link,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { Layout, Menu, theme } from "antd";
+import { Layout, Menu, theme, Col, Row } from "antd";
 import {
   DesktopOutlined,
   PieChartOutlined,
@@ -35,28 +35,39 @@ const MainPage = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header className="site-layout-background" style={{ padding: 0 }}>
-        <div className="top-menu-wrapper">
-          <div className="logo" theme="dark" href="http://localhost:3000">
-            <a href="http://localhost:3000">MedTrack</a>
-          </div>
-          <div className="top-menu-middle-divider" theme="dark"></div>
-          <Menu
-            className="top-menu"
-            theme="dark"
-            defaultSelectedKeys={["1"]}
-            mode="horizontal"
-          >
-            <Menu.Item key="10">Sign Up</Menu.Item>
-            <Menu.Item key="11">Login</Menu.Item>
-            <Menu.Item key="12">Logout</Menu.Item>
-          </Menu>
-        </div>
+        <div className="logo" />
+        <Row>
+          <Col span={4} className="logo-container">
+            <div className="logo" theme="dark" href="http://localhost:3000">
+              <a href="http://localhost:3000">MedTrack</a>
+            </div>
+          </Col>
+          <Col span={4} className="menu-message-wrapper">
+            <h3>Hi,</h3>
+          </Col>
+          <Col span={16}>
+            <Menu
+              className="top-menu"
+              theme="dark"
+              defaultSelectedKeys={["1"]}
+              mode="horizontal"
+            >
+              <SubMenu key="sub1" icon={<UserOutlined />} title="User">
+                <Menu.Item key="2">
+                  <a href="/signup">Sign Up</a>
+                </Menu.Item>
+                <Menu.Item key="3">Login</Menu.Item>
+                <Menu.Item key="4">Logout</Menu.Item>
+              </SubMenu>
+            </Menu>
+          </Col>
+        </Row>
       </Header>
       <Layout>
         <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
           <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
             <Menu.Item key="2" icon={<PieChartOutlined />}>
-              Option 1
+              Dash Board
             </Menu.Item>
             <Menu.Item key="3" icon={<DesktopOutlined />}>
               Mediation

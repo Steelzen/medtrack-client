@@ -17,14 +17,8 @@ p {
   font-size: 12;
 }
 
-.top-menu-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #fff;
-  padding: auto;
-  height: 64px;
-  border-bottom: 1px solid #f0f0f0;
+.logo-container {
+  padding-left: 10px;
 }
 
 .logo {
@@ -36,7 +30,16 @@ p {
 }
 
 .top-menu {
-  width: 40%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.menu-message-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(222, 218, 218);
 }
 
 #components-layout-demo-top-side-2 .logo {
@@ -50,6 +53,11 @@ p {
 .ant-row-rtl #components-layout-demo-top-side-2 .logo {
   float: right;
   margin: 16px 0 16px 24px;
+}
+
+.col-right {
+  display: flex;
+  justify-content: flex-end;
 }
 
 /* Advice page */
