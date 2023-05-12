@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+a {
+  text-decoration: none;
+}
+
 p {
   text-align: left;
   font-size: 12;
@@ -23,6 +27,12 @@ p {
 
 .logo {
   width: 5%;
+}
+
+.logo-img {
+  width: 100px;
+  height: 50px;
+  border-radius: 100%;
 }
 
 .top-menu-middle-divider {
@@ -58,6 +68,13 @@ p {
 .col-right {
   display: flex;
   justify-content: flex-end;
+}
+
+/* Main page */
+.main-page-logo {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
 }
 
 /* Advice page */

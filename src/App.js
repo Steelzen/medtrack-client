@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import MainPage from "./pages/mainpage";
 import SignUp from "./pages/signup";
+import Login from "./pages/login";
 
 import { unstable_mockFirebase } from "@firebase/rules-unit-testing";
 import firebase from "firebase/compat/app";
@@ -35,8 +36,9 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/*" element={<MainPage />} />
+        <Route path="/index" element={<MainPage />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route exact path="/login" element={<Login />} />
       </Routes>
     </div>
   );

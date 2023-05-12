@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Layout, Breadcrumb, Spin, Empty } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
+import MedTrackLogo from "../images/MedTrack_Logo.png";
 
 const { Content } = Layout;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -55,19 +56,16 @@ const MainContent = () => {
         <Breadcrumb.Item>User</Breadcrumb.Item>
         <Breadcrumb.Item>Bill</Breadcrumb.Item>
       </Breadcrumb>
-      <div
-        className="site-layout-background"
-        style={{ padding: 24, minHeight: 360 }}
-      >
-        <h3>Hi your license is {medStaff["license_number"]}</h3>
-        <p>This is testing for fetching data</p>
-        {details.map((item, index) => (
-          <div key={index}>
-            <h3>{item["content1"]}</h3>
-            <h3>{item["content2"]}</h3>
-          </div>
-        ))}
-      </div>
+
+      <h3>Hi your license is {medStaff["license_number"]}</h3>
+      <img className="main-page-logo" src={MedTrackLogo} alt="logo" />
+      <p>This is testing for fetching data</p>
+      {details.map((item, index) => (
+        <div key={index}>
+          <h3>{item["content1"]}</h3>
+          <h3>{item["content2"]}</h3>
+        </div>
+      ))}
     </Content>
   );
 };
