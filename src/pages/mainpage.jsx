@@ -7,6 +7,7 @@ import {
   Outlet,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { getAuth } from "firebase/auth";
 import { Layout, Menu, theme, Col, Row, Avatar } from "antd";
 import {
   DesktopOutlined,
@@ -29,12 +30,15 @@ const MainPage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
+  const auth = getAuth();
+
   const {
     token: { colorBgContainer },
   } = theme.useToken();
 
-  const handleLogout = (e) => {
+  const handleLogout = async (e) => {
     console.log("Logout");
+    await auth.signOut();
     navigate("/login");
   };
 

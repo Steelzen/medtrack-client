@@ -79,14 +79,13 @@ const SignUp = ({ db }) => {
           // Signed in
           const user = userCredential.user;
           // ...
+          // Redirect to the main page
+          navigate("/home");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
         });
-
-      // Redirect to the main page
-      navigate("/");
     } catch (error) {
       // Handle sign-up error
       console.log(error);

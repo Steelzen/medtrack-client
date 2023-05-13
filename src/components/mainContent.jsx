@@ -52,11 +52,6 @@ const MainContent = () => {
 
   return (
     <Content style={{ margin: "0 16px" }}>
-      <Breadcrumb style={{ margin: "16px 0" }}>
-        <Breadcrumb.Item>User</Breadcrumb.Item>
-        <Breadcrumb.Item>Bill</Breadcrumb.Item>
-      </Breadcrumb>
-
       <h3>Hi your license is {medStaff["license_number"]}</h3>
       <img className="main-page-logo" src={MedTrackLogo} alt="logo" />
       <p>This is testing for fetching data</p>

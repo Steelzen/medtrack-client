@@ -15,7 +15,6 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Advice from "./components/advice";
 import MainContent from "./components/mainContent";
-import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE_TxF7-POkszvqbvyQlLGj82aCHQAhMM",
