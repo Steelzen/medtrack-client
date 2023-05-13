@@ -1,11 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  redirect,
-  Route,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import MainPage from "./pages/mainpage";
 import SignUp from "./pages/signup";
 import Login from "./pages/login";
@@ -13,6 +8,8 @@ import Login from "./pages/login";
 import { unstable_mockFirebase } from "@firebase/rules-unit-testing";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import Advice from "./components/advice";
+import MainContent from "./components/mainContent";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE_TxF7-POkszvqbvyQlLGj82aCHQAhMM",
@@ -34,13 +31,18 @@ function App() {
   const db = firebase.firestore();
 
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/index" element={<MainPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route exact path="/login" element={<Login />} />
-      </Routes>
-    </div>
+    <Router>
+      <div className="App">
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<Login />} />
+          <Route element={<MainPage />}>
+            <Route index element={<MainContent />} />
+            <Route path="/advice" element={<Advice />} />
+          </Route>
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

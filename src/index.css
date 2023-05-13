@@ -72,9 +72,9 @@ p {
 
 /* Main page */
 .main-page-logo {
-  width: 70%;
-  height: 70%;
-  border-radius: 50%;
+  width: 50%;
+  height: 50%;
+  border-radius: 100%;
 }
 
 /* Advice page */

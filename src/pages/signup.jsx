@@ -11,6 +11,7 @@ import getCookie from "../components/getCookie";
 import axios from "axios";
 
 const SignUp = ({ db }) => {
+  const [position, setPosition] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -49,7 +50,7 @@ const SignUp = ({ db }) => {
       const { user } = userCredential;
 
       const uid = user.uid;
-      const group = "medistaff";
+      const group = position === "medistaff" ? "medistaff" : "patient";
       const document_id = email;
 
       // Get the CSRF token from the cookie
@@ -66,7 +67,10 @@ const SignUp = ({ db }) => {
       };
 
       // Add the user's license number to the "add_medistaff" endpoint
-      const endpoint = `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/`;
+      const endpoint =
+        position === "medistaff"
+          ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/`
+          : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/`;
       await axios.post(endpoint, {}, options);
 
       // After create user and automatically sign in
@@ -92,6 +96,15 @@ const SignUp = ({ db }) => {
   return (
     <div>
       <Form onSubmit={handleSignUp}>
+        <Form.Select
+          aria-label="Default select example"
+          value={position}
+          onChange={(e) => setPosition(e.target.value)}
+        >
+          <option>Choose your position</option>
+          <option value="patient">Patient</option>
+          <option value="medistaff">Healthcare Worker</option>
+        </Form.Select>
         <Form.Control
           type="text"
           placeholder="Enter your email"
@@ -113,13 +126,15 @@ const SignUp = ({ db }) => {
           onChange={(e) => setPasswordConfirm(e.target.value)}
           name="passwordConfirm"
         />
-        <Form.Control
-          type="text"
-          placeholder="Enter your license number"
-          value={licenseNumber}
-          onChange={(e) => setLicenseNumber(e.target.value)}
-          name="licenseNumber"
-        />
+        {position === "medistaff" && (
+          <Form.Control
+            type="text"
+            placeholder="Enter your license number"
+            value={licenseNumber}
+            onChange={(e) => setLicenseNumber(e.target.value)}
+            name="licenseNumber"
+          />
+        )}
         <Button variant="outline-secondary" id="button-addon2" type="submit">
           Enter
         </Button>

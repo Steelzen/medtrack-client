@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { Layout, Breadcrumb, Spin, Empty } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
-import MedTrackLogo from "../images/MedTrack_Logo.png";
+import MedTrackLogo from "../images/MedTrack_Logo3.png";
 
 const { Content } = Layout;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;

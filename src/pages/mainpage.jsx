@@ -1,10 +1,10 @@
 import {
   BrowserRouter as Router,
-  redirect,
   Route,
   Routes,
   Link,
   useNavigate,
+  Outlet,
 } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Layout, Menu, theme, Col, Row, Avatar } from "antd";
@@ -16,8 +16,6 @@ import {
   UserOutlined,
   NotificationOutlined,
 } from "@ant-design/icons";
-import MainContent from "../components/mainContent";
-import Advice from "../components/advice";
 import MedTrackLogo from "../images/MedTrack_Logo.png";
 
 const { Header, Footer, Sider } = Layout;
@@ -46,8 +44,8 @@ const MainPage = () => {
         <div className="logo" />
         <Row>
           <Col span={6} className="logo-container">
-            <div className="logo" theme="dark" href="http://localhost:3000">
-              <a href="http://localhost:3000/index">
+            <div className="logo" theme="dark">
+              <a href="/">
                 <img className="logo-img" src={MedTrackLogo} alt="logo" />
               </a>
             </div>
@@ -106,10 +104,7 @@ const MainPage = () => {
             className="site-layout-background"
             style={{ padding: 24, minHeight: 780 }}
           >
-            <Routes>
-              <Route exact path="/" element={<MainContent />} />
-              <Route path="/advice" element={<Advice />} />
-            </Routes>
+            <Outlet />
           </div>
           <Footer style={{ textAlign: "center" }}>
             ©2023 Created by Taehyung Kwon
