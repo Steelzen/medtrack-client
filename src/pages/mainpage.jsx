@@ -45,7 +45,7 @@ const MainPage = () => {
         <Row>
           <Col span={6} className="logo-container">
             <div className="logo" theme="dark">
-              <a href="/">
+              <a href="/home">
                 <img className="logo-img" src={MedTrackLogo} alt="logo" />
               </a>
             </div>
@@ -92,7 +92,7 @@ const MainPage = () => {
               <Menu.Item key="6">Bill</Menu.Item>
             </SubMenu>
             <Menu.Item key="7" icon={<FileOutlined />}>
-              <Link to="/advice">Advice</Link>
+              <Link to="/home/advice">Advice</Link>
             </Menu.Item>
             <Menu.Item key="8" icon={<NotificationOutlined />}>
               Communication

@@ -1,6 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import MainPage from "./pages/mainpage";
 import SignUp from "./pages/signup";
 import Login from "./pages/login";
@@ -10,6 +15,7 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Advice from "./components/advice";
 import MainContent from "./components/mainContent";
+import { useEffect } from "react";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDE_TxF7-POkszvqbvyQlLGj82aCHQAhMM",
@@ -34,11 +40,12 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+          <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
-          <Route element={<MainPage />}>
+          <Route path="/home" element={<MainPage />}>
             <Route index element={<MainContent />} />
-            <Route path="/advice" element={<Advice />} />
+            <Route path="advice" element={<Advice />} />
           </Route>
         </Routes>
       </div>
