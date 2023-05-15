@@ -54,7 +54,6 @@ const MainContent = () => {
     <Content style={{ margin: "0 16px" }}>
       <h3>Hi your license is {medStaff["license_number"]}</h3>
       <img className="main-page-logo" src={MedTrackLogo} alt="logo" />
-      <p>This is testing for fetching data</p>
       {details.map((item, index) => (
         <div key={index}>
           <h3>{item["content1"]}</h3>

@@ -1,7 +1,7 @@
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import validator from "validator";
 import getCookie from "../components/getCookie";
 import axios from "axios";
@@ -71,8 +71,19 @@ const Login = () => {
           onChange={(e) => setPassword(e.target.value)}
           name="password"
         />
+        <a href="#">Forget password?</a>
         <Button variant="outline-secondary" id="button-addon2" type="submit">
           Enter
+        </Button>
+        <p> Are you new? </p>
+        <Button
+          as={Link}
+          to="/signup"
+          variant="outline-secondary"
+          id="button-addon2"
+          type="button"
+        >
+          Sign Up
         </Button>
       </Form>
     </div>

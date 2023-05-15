@@ -17,7 +17,7 @@ const Advice = () => {
 
     setLoading(true);
 
-    const prompt = `Can you provide information on the symptoms and treatment options for "${input}"?`;
+    const prompt = `Please generate a comprehensive overview of "${input}" medication, covering its uses, potential side effects, and any precautions to be aware of.`;
 
     const response = await callOpenAI(prompt, {
       temperature: 0.5,
@@ -38,8 +38,7 @@ const Advice = () => {
       <div className="advice-title-container">
         <h1 className="advice-title">Advice</h1>
         <p className="advice-intro">
-          AI powered medical advice. Input your symptoms, AI will help you
-          before getting touch doctor.
+          AI powered medical advice. Input the medication you want to know.
         </p>
       </div>
       <div className="question-container">
@@ -77,7 +76,7 @@ const Advice = () => {
           <InputGroup className="mb-3">
             <Form.Control
               type="text"
-              placeholder="Send your symptoms"
+              placeholder="Send your medication"
               value={input}
               onChange={(e) => setInput(e.target.value)}
             />

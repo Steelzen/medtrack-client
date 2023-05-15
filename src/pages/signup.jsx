@@ -3,55 +3,108 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { Form, Button } from "react-bootstrap";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Form, Button } from "react-bootstrap";
+import * as formik from "formik";
+import { Field, ErrorMessage } from "formik";
+import * as yup from "yup";
 import validator from "validator";
 import getCookie from "../components/getCookie";
 import axios from "axios";
 
 const SignUp = ({ db }) => {
-  const [position, setPosition] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [licenseNumber, setLicenseNumber] = useState("");
+  const { Formik } = formik;
+  const schema = yup.object().shape({
+    position: yup.string().required("Position is required"),
+    email: yup
+      .string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: yup.string().required("Password is required"),
+    passwordConfirm: yup
+      .string()
+      .oneOf([yup.ref("password"), null], "Passwords must match")
+      .required("Password confirmation is required"),
+    firstName: yup.string().required("First name is required"),
+    lastName: yup.string().required("Last name is required"),
+    address: yup.string().required("Address is required"),
+    city: yup.string().required("City is required"),
+    state: yup.string().required("State is required"),
+    zip: yup.string().required("Zip code is required"),
+    phone: yup.string().required("Phone number is required"),
+    role: yup.string().test({
+      name: "required-if-medistaff",
+      exclusive: true,
+      message: "Role is required",
+      test: function (value) {
+        const { position } = this.parent;
+        return (
+          position !== "medistaff" || (position === "medistaff" && !!value)
+        );
+      },
+    }),
+    licenseNumber: yup.string().test({
+      name: "required-if-medistaff",
+      exclusive: true,
+      message: "License number is required",
+      test: function (value) {
+        const { position } = this.parent;
+        return (
+          position !== "medistaff" || (position === "medistaff" && !!value)
+        );
+      },
+    }),
+    organisation: yup.string().test({
+      name: "required-if-medistaff",
+      exclusive: true,
+      message: "Organization is required",
+      test: function (value) {
+        const { position } = this.parent;
+        return (
+          position !== "medistaff" || (position === "medistaff" && !!value)
+        );
+      },
+    }),
+    terms: yup
+      .bool()
+      .required("Terms must be accepted")
+      .oneOf([true], "Terms must be accepted"),
+  });
 
   const navigate = useNavigate();
 
   const auth = getAuth();
 
-  const handleSignUp = async (e) => {
-    e.preventDefault();
-
+  const handleSignUp = async (values) => {
     try {
       // Validate email and password before signing up
       if (
-        !email ||
-        !password ||
-        email.trim() === "" ||
-        password.trim() === ""
+        !values.email ||
+        !values.password ||
+        values.email.trim() === "" ||
+        values.password.trim() === ""
       ) {
         throw new Error("Email and password are required");
       }
-      if (!validator.isEmail(email)) {
+      if (!validator.isEmail(values.email)) {
         throw new Error("Invalid email address");
       }
-      if (password.length < 6) {
+      if (values.password.length < 6) {
         throw new Error("Password must be at least 6 characters long");
       }
 
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        email,
-        password
+        values.email,
+        values.password
       );
 
       const { user } = userCredential;
 
       const uid = user.uid;
-      const group = position === "medistaff" ? "medistaff" : "patient";
-      const document_id = email;
+      const group = values.position === "medistaff" ? "medistaff" : "patient";
+      const document_id = values.email;
+      const licenseNumber = values.licenseNumber;
 
       // Get the CSRF token from the cookie
       const csrftoken = getCookie("csrftoken");
@@ -68,13 +121,13 @@ const SignUp = ({ db }) => {
 
       // Add the user's license number to the "add_medistaff" endpoint
       const endpoint =
-        position === "medistaff"
+        values.position === "medistaff"
           ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/`
           : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/`;
       await axios.post(endpoint, {}, options);
 
       // After create user and automatically sign in
-      await signInWithEmailAndPassword(auth, email, password)
+      await signInWithEmailAndPassword(auth, values.email, values.password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
@@ -94,50 +147,253 @@ const SignUp = ({ db }) => {
 
   return (
     <div>
-      <Form onSubmit={handleSignUp}>
-        <Form.Select
-          aria-label="Default select example"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-        >
-          <option>Choose your position</option>
-          <option value="patient">Patient</option>
-          <option value="medistaff">Healthcare Worker</option>
-        </Form.Select>
-        <Form.Control
-          type="text"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          name="email"
-        />
-        <Form.Control
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          name="password"
-        />
-        <Form.Control
-          type="password"
-          placeholder="Confirm your password"
-          value={passwordConfirm}
-          onChange={(e) => setPasswordConfirm(e.target.value)}
-          name="passwordConfirm"
-        />
-        {position === "medistaff" && (
-          <Form.Control
-            type="text"
-            placeholder="Enter your license number"
-            value={licenseNumber}
-            onChange={(e) => setLicenseNumber(e.target.value)}
-            name="licenseNumber"
-          />
+      <Formik
+        validationSchema={schema}
+        onSubmit={handleSignUp}
+        initialValues={{
+          position: "",
+          email: "",
+          password: "",
+          passwordConfirm: "",
+          firstName: "",
+          lastName: "",
+          address: "",
+          city: "",
+          state: "",
+          zip: "",
+          phone: "",
+          role: "",
+          licenseNumber: "",
+          organisation: "",
+          terms: false,
+        }}
+      >
+        {({ handleSubmit, touched, errors, values }) => (
+          <Form noValidate onSubmit={handleSubmit}>
+            <Field
+              name="position"
+              as="select"
+              className={
+                touched.position && errors.position ? "is-invalid" : ""
+              }
+            >
+              <option value="">Choose your position</option>
+              <option value="patient">Patient</option>
+              <option value="medistaff">Healthcare Provider</option>
+            </Field>
+            <ErrorMessage
+              name="position"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your email"
+              as={Field}
+              name="email"
+              className={touched.email && errors.email ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="email"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="password"
+              placeholder="Enter your password"
+              as={Field}
+              name="password"
+              className={
+                touched.password && errors.password ? "is-invalid" : ""
+              }
+            />
+            <ErrorMessage
+              name="password"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="password"
+              placeholder="Confirm your password"
+              as={Field}
+              name="passwordConfirm"
+              className={
+                touched.passwordConfirm && errors.passwordConfirm
+                  ? "is-invalid"
+                  : ""
+              }
+            />
+            <ErrorMessage
+              name="passwordConfirm"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your first name"
+              as={Field}
+              name="firstName"
+              className={
+                touched.firstName && errors.firstName ? "is-invalid" : ""
+              }
+            />
+            <ErrorMessage
+              name="firstName"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your last name"
+              as={Field}
+              name="lastName"
+              className={
+                touched.lastName && errors.lastName ? "is-invalid" : ""
+              }
+            />
+            <ErrorMessage
+              name="lastName"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your address"
+              as={Field}
+              name="address"
+              className={touched.address && errors.address ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="address"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your city"
+              as={Field}
+              name="city"
+              className={touched.city && errors.city ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="city"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your state"
+              as={Field}
+              name="state"
+              className={touched.state && errors.state ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="state"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your zip code"
+              as={Field}
+              name="zip"
+              className={touched.zip && errors.zip ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="zip"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Control
+              type="text"
+              placeholder="Enter your phone number"
+              as={Field}
+              name="phone"
+              className={touched.phone && errors.phone ? "is-invalid" : ""}
+            />
+            <ErrorMessage
+              name="phone"
+              component="div"
+              className="invalid-feedback"
+            />
+            {values.position === "medistaff" && (
+              <>
+                <Form.Group controlId="role">
+                  <Field
+                    name="role"
+                    as="select"
+                    className={touched.role && errors.role ? "is-invalid" : ""}
+                  >
+                    <option value="">Choose your role</option>
+                    <option value="physician">Physician</option>
+                    <option value="dentist">Dentist</option>
+                    <option value="pharmacist">Pharmacist</option>
+                    <option value="nurse">Nurse</option>
+                    <option value="other">Other</option>
+                  </Field>
+                  <ErrorMessage
+                    name="role"
+                    component="div"
+                    className="invalid-feedback"
+                  />
+                </Form.Group>
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your license number"
+                  as={Field}
+                  name="licenseNumber"
+                  className={
+                    touched.licenseNumber && errors.licenseNumber
+                      ? "is-invalid"
+                      : ""
+                  }
+                />
+                <ErrorMessage
+                  name="licenseNumber"
+                  component="div"
+                  className="invalid-feedback"
+                />
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your clinic/hospital/pharmacy name"
+                  as={Field}
+                  name="organisation"
+                  className={
+                    touched.organisation && errors.organisation
+                      ? "is-invalid"
+                      : ""
+                  }
+                />
+                <ErrorMessage
+                  name="organisation"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </>
+            )}
+            <Form.Group className="mb-3">
+              <Form.Check
+                required
+                name="terms"
+                label="Agree to terms and conditions"
+                as={Field} // Use Field component to handle the checkbox
+                type="checkbox"
+                id="validationFormik0"
+                isInvalid={touched.terms && !!errors.terms}
+                feedback={errors.terms}
+                feedbackType="invalid"
+              />
+            </Form.Group>
+            <Button
+              variant="outline-secondary"
+              id="button-addon2"
+              type="submit"
+            >
+              Enter
+            </Button>
+          </Form>
         )}
-        <Button variant="outline-secondary" id="button-addon2" type="submit">
-          Enter
-        </Button>
-      </Form>
+      </Formik>
     </div>
   );
 };
