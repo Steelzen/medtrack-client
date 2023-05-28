@@ -1,10 +1,11 @@
 import { getAuth } from "firebase/auth";
 import firebase from "firebase/compat/app";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Layout, Breadcrumb, Spin, Empty } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 import MedTrackLogo from "../images/MedTrack_Logo3.png";
+import { MainContext } from "../pages/mainpage";
 
 const { Content } = Layout;
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
@@ -14,6 +15,7 @@ const MainContent = () => {
   const [medStaff, setMedStaff] = useState([]);
   const [fetching, setFetching] = useState(true);
   const [details, setDetails] = useState([]);
+  const { firstName, position } = useContext(MainContext);
 
   let licenseNumber = "";
 
@@ -52,7 +54,7 @@ const MainContent = () => {
 
   return (
     <Content style={{ margin: "0 16px" }}>
-      <h3>Hi your license is {medStaff["license_number"]}</h3>
+      <h3>Welcome, {firstName} </h3>
       <img className="main-page-logo" src={MedTrackLogo} alt="logo" />
       {details.map((item, index) => (
         <div key={index}>

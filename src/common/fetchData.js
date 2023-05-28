@@ -1,8 +1,6 @@
 import axios from "axios";
-import { getAuth } from "firebase/auth";
 
 const fetchAllUserDoc = async () => {
-  const user = await getAuth().currentUser;
   const result = [];
 
   const medistaff = await axios.get(
@@ -13,8 +11,12 @@ const fetchAllUserDoc = async () => {
     "http://localhost:4001/get_document_all/patient/"
   );
 
-  result.push(medistaff.data.docs);
-  result.push(patient.data.docs);
+  medistaff.data.docs.forEach((doc) => {
+    result.push(doc);
+  });
+  patient.data.docs.forEach((doc) => {
+    result.push(doc);
+  });
 
   return result;
 };
@@ -34,3 +36,5 @@ const fetchAllPatientDoc = async () => {
 
   return result.data.docs;
 };
+
+export { fetchAllUserDoc, fetachAllMedistaffDoc, fetchAllPatientDoc };
