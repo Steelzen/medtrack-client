@@ -132,7 +132,7 @@ const MainPage = () => {
           <Sider collapsible collapsed={collapsed} onCollapse={setCollapsed}>
             <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline">
               <Menu.Item key="2" icon={<PieChartOutlined />}>
-                Profile
+                <Link to="/home/profile">Profile</Link>
               </Menu.Item>
               <Menu.Item key="3" icon={<DesktopOutlined />}>
                 Mediation

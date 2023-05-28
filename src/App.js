@@ -15,15 +15,16 @@ import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Advice from "./components/advice";
 import MainContent from "./components/mainContent";
+import Profile from "./components/profile";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDE_TxF7-POkszvqbvyQlLGj82aCHQAhMM",
-  authDomain: "medtrack-b54f3.firebaseapp.com",
-  projectId: "medtrack-b54f3",
-  storageBucket: "medtrack-b54f3.appspot.com",
-  messagingSenderId: "33639966885",
-  appId: "1:33639966885:web:deee45b2be3d88f31a454c",
-  measurementId: "G-2FR635ZJNC",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 function App() {
@@ -45,6 +46,7 @@ function App() {
           <Route path="/home" element={<MainPage />}>
             <Route index element={<MainContent />} />
             <Route path="advice" element={<Advice />} />
+            <Route path="profile" element={<Profile />} />
           </Route>
         </Routes>
       </div>
