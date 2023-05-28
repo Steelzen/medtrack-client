@@ -5,6 +5,8 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import * as formik from "formik";
 import { Field, ErrorMessage } from "formik";
 import * as yup from "yup";
@@ -104,7 +106,17 @@ const SignUp = ({ db }) => {
       const uid = user.uid;
       const group = values.position === "medistaff" ? "medistaff" : "patient";
       const document_id = values.email;
+      const position = values.position === "medistaff" ? "M" : "P";
       const licenseNumber = values.licenseNumber;
+      const firstName = values.firstName;
+      const lastName = values.lastName;
+      const address = encodeURIComponent(values.address);
+      const city = values.city;
+      const state = values.state;
+      const zip = values.zip;
+      const phone = values.phone;
+      const role = values.role;
+      const organisation = values.organisation;
 
       // Get the CSRF token from the cookie
       const csrftoken = getCookie("csrftoken");
@@ -122,8 +134,8 @@ const SignUp = ({ db }) => {
       // Add the user's license number to the "add_medistaff" endpoint
       const endpoint =
         values.position === "medistaff"
-          ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/`
-          : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/`;
+          ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/${position}/${firstName}/${lastName}/${address}/${city}/${state}/${zip}/${phone}/${role}/${organisation}/`
+          : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/${position}/${firstName}/${lastName}/${address}/${city}/${state}/${zip}/${phone}/`;
       await axios.post(endpoint, {}, options);
 
       // After create user and automatically sign in
@@ -146,7 +158,8 @@ const SignUp = ({ db }) => {
   };
 
   return (
-    <div>
+    <div className="signup-wrapper">
+      <h1>Sign Up</h1>
       <Formik
         validationSchema={schema}
         onSubmit={handleSignUp}
@@ -170,22 +183,33 @@ const SignUp = ({ db }) => {
       >
         {({ handleSubmit, touched, errors, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <Field
-              name="position"
-              as="select"
-              className={
-                touched.position && errors.position ? "is-invalid" : ""
-              }
-            >
-              <option value="">Choose your position</option>
-              <option value="patient">Patient</option>
-              <option value="medistaff">Healthcare Provider</option>
-            </Field>
-            <ErrorMessage
-              name="position"
-              component="div"
-              className="invalid-feedback"
-            />
+            <Row className="mb-3">
+              <Form.Group
+                as={Col}
+                md="4"
+                controlId="validationFormik101"
+                className="position-relative"
+              >
+                <Form.Label>Position </Form.Label>
+                <Field
+                  name="position"
+                  as="select"
+                  className={
+                    touched.position && errors.position ? "is-invalid" : ""
+                  }
+                >
+                  <option value="">Choose your position</option>
+                  <option value="patient">Patient</option>
+                  <option value="medistaff">Healthcare Provider</option>
+                </Field>
+                <ErrorMessage
+                  name="position"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Form.Group>
+            </Row>
+            <Form.Label>Email </Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter your email"
@@ -198,6 +222,7 @@ const SignUp = ({ db }) => {
               component="div"
               className="invalid-feedback"
             />
+            <Form.Label>Password </Form.Label>
             <Form.Control
               type="password"
               placeholder="Enter your password"
@@ -212,6 +237,7 @@ const SignUp = ({ db }) => {
               component="div"
               className="invalid-feedback"
             />
+            <Form.Label>Password confirm </Form.Label>
             <Form.Control
               type="password"
               placeholder="Confirm your password"
@@ -376,7 +402,7 @@ const SignUp = ({ db }) => {
                 required
                 name="terms"
                 label="Agree to terms and conditions"
-                as={Field} // Use Field component to handle the checkbox
+                as={Field}
                 type="checkbox"
                 id="validationFormik0"
                 isInvalid={touched.terms && !!errors.terms}
