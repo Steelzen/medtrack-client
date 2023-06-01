@@ -11,6 +11,7 @@ import SignUp from "./pages/signup";
 import Login from "./pages/login";
 
 import { unstable_mockFirebase } from "@firebase/rules-unit-testing";
+import { getAuth } from "firebase/auth";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import Advice from "./components/advice";
@@ -35,6 +36,7 @@ function App() {
   firebase.initializeApp(firebaseConfig);
 
   const db = firebase.firestore();
+  const auth = getAuth();
 
   return (
     <Router>

@@ -3,13 +3,13 @@ import { Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import validator from "validator";
-import getCookie from "../components/getCookie";
-import axios from "axios";
 
 const Login = () => {
   const [position, setPosition] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const auth = getAuth();
 
@@ -21,27 +21,49 @@ const Login = () => {
     if (auth.currentUser) {
       navigate("/home");
     }
-  }, []);
+  }, [auth.currentUser]);
+
+  const validateForm = () => {
+    let isValid = true;
+
+    if (!validator.isEmail(email)) {
+      setEmailError("Invalid email address");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (password.length < 6) {
+      setPasswordError("Password should be at least 6 characters long");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    return isValid;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Login");
 
-    try {
-      await signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          // ...
-          navigate("/home");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log(errorCode, errorMessage);
-        });
-    } catch (error) {
-      console.log(error);
+    if (validateForm()) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // Signed ins
+            const user = userCredential.user;
+            // ...
+            navigate("/home");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode, errorMessage);
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -64,14 +86,22 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           name="email"
+          isInvalid={!!emailError}
         />
+        <Form.Control.Feedback type="invalid">
+          {emailError}
+        </Form.Control.Feedback>
         <Form.Control
           type="password"
           placeholder="Enter your password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           name="password"
+          isInvalid={!!passwordError}
         />
+        <Form.Control.Feedback type="invalid">
+          {passwordError}
+        </Form.Control.Feedback>
         <a href="#">Forget password?</a>
         <Button variant="outline-secondary" id="button-addon2" type="submit">
           Enter

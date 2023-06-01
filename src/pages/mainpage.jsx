@@ -6,7 +6,7 @@ import {
   useNavigate,
   Outlet,
 } from "react-router-dom";
-import { useState, useEffect, createContext } from "react";
+import { useState, useEffect, useRef, createContext } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Layout, Menu, theme, Col, Row, Avatar } from "antd";
 import {
@@ -16,6 +16,7 @@ import {
   TeamOutlined,
   UserOutlined,
   NotificationOutlined,
+  PicLeftOutlined,
 } from "@ant-design/icons";
 import MedTrackLogo from "../images/MedTrack_Logo.png";
 import {
@@ -40,9 +41,19 @@ const MainPage = () => {
   const [firstName, setFirstName] = useState("");
   const [position, setPosition] = useState("");
   const navigate = useNavigate();
-  const auth = getAuth();
+  let auth = getAuth();
 
   useEffect(() => {
+    const checkCurrentUser = async () => {
+      auth = await getAuth();
+
+      if (auth.currentUser === null) {
+        navigate("/login");
+      }
+    };
+
+    checkCurrentUser();
+
     const fetchData = async () => {
       let userID = "";
       let userDoc = [];
