@@ -31,9 +31,9 @@ const SignUp = ({ db }) => {
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
     dateOfBirth: yup
-      .date("Invalid date format") // Specify the error message for invalid date format
-      .max(new Date(), "Date of Birth cannot be in the future") // Specify the error message for date in the future
-      .required("Date of Birth is required"), // Specify the error message for required field
+      .date("Invalid date format")
+      .max(new Date(), "Date of Birth cannot be in the future")
+      .required("Date of Birth is required"),
     address: yup.string().required("Address is required"),
     city: yup.string().required("City is required"),
     state: yup.string().required("State is required"),
@@ -140,8 +140,8 @@ const SignUp = ({ db }) => {
       // Add the user's license number to the "add_medistaff" endpoint
       const endpoint =
         values.position === "medistaff"
-          ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/${position}/${firstName}/${lastName}/${address}/${city}/${state}/${zip}/${phone}/${role}/${organisation}/`
-          : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/${position}/${firstName}/${lastName}/${address}/${city}/${state}/${zip}/${phone}/`;
+          ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/${position}/${firstName}/${lastName}/${dateOfBirth}/${address}/${city}/${state}/${zip}/${phone}/${role}/${organisation}/`
+          : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/${position}/${firstName}/${lastName}/${dateOfBirth}/${address}/${city}/${state}/${zip}/${phone}/`;
       await axios.post(endpoint, {}, options);
 
       // After create user and automatically sign in
