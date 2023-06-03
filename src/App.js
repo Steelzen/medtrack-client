@@ -17,6 +17,7 @@ import "firebase/compat/auth";
 import Advice from "./components/advice";
 import MainContent from "./components/mainContent";
 import Profile from "./components/profile";
+import ResetPassword from "./components/resetPassword";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -45,6 +46,7 @@ function App() {
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/home" element={<MainPage />}>
             <Route index element={<MainContent />} />
             <Route path="advice" element={<Advice />} />

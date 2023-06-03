@@ -10,6 +10,7 @@ import Row from "react-bootstrap/Row";
 import * as formik from "formik";
 import { Field, ErrorMessage } from "formik";
 import * as yup from "yup";
+import moment from "moment";
 import validator from "validator";
 import getCookie from "../components/getCookie";
 import axios from "axios";
@@ -29,6 +30,10 @@ const SignUp = ({ db }) => {
       .required("Password confirmation is required"),
     firstName: yup.string().required("First name is required"),
     lastName: yup.string().required("Last name is required"),
+    dateOfBirth: yup
+      .date("Invalid date format") // Specify the error message for invalid date format
+      .max(new Date(), "Date of Birth cannot be in the future") // Specify the error message for date in the future
+      .required("Date of Birth is required"), // Specify the error message for required field
     address: yup.string().required("Address is required"),
     city: yup.string().required("City is required"),
     state: yup.string().required("State is required"),
@@ -110,6 +115,7 @@ const SignUp = ({ db }) => {
       const licenseNumber = values.licenseNumber;
       const firstName = values.firstName;
       const lastName = values.lastName;
+      const dateOfBirth = values.dateOfBirth;
       const address = encodeURIComponent(values.address);
       const city = values.city;
       const state = values.state;
@@ -144,6 +150,7 @@ const SignUp = ({ db }) => {
           // Signed in
           const user = userCredential.user;
           // ...
+          console.log(dateOfBirth);
           // Redirect to the main page
           navigate("/home");
         })
@@ -170,6 +177,7 @@ const SignUp = ({ db }) => {
           passwordConfirm: "",
           firstName: "",
           lastName: "",
+          dateOfBirth: "",
           address: "",
           city: "",
           state: "",
@@ -279,6 +287,21 @@ const SignUp = ({ db }) => {
             />
             <ErrorMessage
               name="lastName"
+              component="div"
+              className="invalid-feedback"
+            />
+            <Form.Label>Date of Birth</Form.Label>
+            <Form.Control
+              type="date"
+              placeholder="Enter your date of birth"
+              as={Field}
+              name="dateOfBirth"
+              className={
+                touched.dateOfBirth && errors.dateOfBirth ? "is-invalid" : ""
+              }
+            />
+            <ErrorMessage
+              name="dateOfBirth"
               component="div"
               className="invalid-feedback"
             />

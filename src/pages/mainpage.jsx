@@ -47,9 +47,15 @@ const MainPage = () => {
     const checkCurrentUser = async () => {
       auth = await getAuth();
 
-      if (auth.currentUser === null) {
-        navigate("/login");
-      }
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is logged in, stay on the home page
+          // You can perform any additional actions or set states here
+        } else {
+          // User is not logged in, redirect to the login page
+          navigate("/login");
+        }
+      });
     };
 
     checkCurrentUser();
