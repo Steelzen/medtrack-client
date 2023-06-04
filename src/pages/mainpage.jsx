@@ -36,10 +36,23 @@ const items1 = ["1", "2", "3"].map((key) => ({
 export const MainContext = createContext();
 
 const MainPage = () => {
+  const [userID, setUserID] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [email, setEmail] = useState("");
   const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [position, setPosition] = useState("");
+  const [dateOfBirth, setDateOfBirth] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [zip, setZip] = useState("");
+  const [phone, setPhone] = useState("");
+  // Medistaff only
+  const [role, setRole] = useState("");
+  const [licenseNumber, setLicenseNumber] = useState("");
+  const [organisation, setOrganisation] = useState("");
+
   const navigate = useNavigate();
   let auth = getAuth();
 
@@ -82,8 +95,19 @@ const MainPage = () => {
 
         userDoc.forEach((doc) => {
           if (doc["user_id"] === userID) {
+            setUserID(doc["user_id"]);
             setFirstName(doc["first_name"]);
+            setLastName(doc["last_name"]);
             setPosition(doc["position"]);
+            setDateOfBirth(doc["date_of_birth"]);
+            setAddress(doc["address"]);
+            setCity(doc["city"]);
+            setState(doc["state"]);
+            setZip(doc["zip"]);
+            setPhone(doc["phone"]);
+            setRole(doc["role"]);
+            setLicenseNumber(doc["license_number"]);
+            setOrganisation(doc["organisation"]);
           }
         });
       } catch (error) {
@@ -105,7 +129,24 @@ const MainPage = () => {
   };
 
   return (
-    <MainContext.Provider value={{ email, firstName, position }}>
+    <MainContext.Provider
+      value={{
+        userID,
+        email,
+        firstName,
+        lastName,
+        position,
+        dateOfBirth,
+        address,
+        city,
+        state,
+        zip,
+        phone,
+        role,
+        licenseNumber,
+        organisation,
+      }}
+    >
       <Layout style={{ minHeight: "100vh" }}>
         <Header className="site-layout-background" style={{ padding: 0 }}>
           <div className="logo" />
