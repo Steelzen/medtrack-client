@@ -193,12 +193,13 @@ const MainPage = () => {
                 <Link to="/home/profile">Profile</Link>
               </Menu.Item>
               <Menu.Item key="3" icon={<DesktopOutlined />}>
-                Mediation
+                <Link to="/home/medication">Medication</Link>
               </Menu.Item>
-              <SubMenu key="sub1" icon={<TeamOutlined />} title="Patients">
-                <Menu.Item key="5">Tom</Menu.Item>
-                <Menu.Item key="6">Bill</Menu.Item>
-              </SubMenu>
+              {position === "M" ? (
+                <Menu.Item key="4" icon={<TeamOutlined />}>
+                  <Link to="/home/management">Management</Link>
+                </Menu.Item>
+              ) : null}
               <Menu.Item key="7" icon={<FileOutlined />}>
                 <Link to="/home/advice">Advice</Link>
               </Menu.Item>

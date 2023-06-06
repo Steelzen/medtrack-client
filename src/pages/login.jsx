@@ -1,4 +1,8 @@
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { Form, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,17 +15,27 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
 
-  const auth = getAuth();
+  let auth = getAuth();
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log("Redirect to home if logged in");
+    const checkCurrentUser = async () => {
+      auth = await getAuth();
 
-    if (auth.currentUser) {
-      navigate("/home");
-    }
-  }, [auth.currentUser]);
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          // User is logged in, stay on the home page
+          // You can perform any additional actions or set states here
+          navigate("/home");
+        } else {
+          // User is not logged in, redirect to the login page
+        }
+      });
+    };
+
+    checkCurrentUser();
+  }, []);
 
   const validateForm = () => {
     let isValid = true;
@@ -102,7 +116,7 @@ const Login = () => {
         <Form.Control.Feedback type="invalid">
           {passwordError}
         </Form.Control.Feedback>
-        <a href="#">Forget password?</a>
+        <Link to="/reset-password">Forget password?</Link>
         <Button variant="outline-secondary" id="button-addon2" type="submit">
           Enter
         </Button>

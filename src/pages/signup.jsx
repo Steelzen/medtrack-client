@@ -123,6 +123,7 @@ const SignUp = ({ db }) => {
       const phone = values.phone;
       const role = values.role;
       const organisation = values.organisation;
+      const patientListGroup = "patient_list";
 
       // Get the CSRF token from the cookie
       const csrftoken = getCookie("csrftoken");
@@ -138,11 +139,22 @@ const SignUp = ({ db }) => {
       };
 
       // Add the user's license number to the "add_medistaff" endpoint
-      const endpoint =
+      const userEndPoint =
         values.position === "medistaff"
           ? `http://localhost:4001/add_medistaff/${group}/${document_id}/${uid}/${licenseNumber}/${position}/${firstName}/${lastName}/${dateOfBirth}/${address}/${city}/${state}/${zip}/${phone}/${role}/${organisation}/`
           : `http://localhost:4001/add_patient/${group}/${document_id}/${uid}/${position}/${firstName}/${lastName}/${dateOfBirth}/${address}/${city}/${state}/${zip}/${phone}/`;
-      await axios.post(endpoint, {}, options);
+
+      const patientListEndPoint =
+        values.position === "medistaff"
+          ? `http://localhost:4001/register_patient_list/${patientListGroup}/${uid}/`
+          : null;
+
+      await axios.post(userEndPoint, {}, options);
+
+      // Make patient list for medistaff
+      if (patientListEndPoint) {
+        await axios.post(patientListEndPoint, {}, options);
+      }
 
       // After create user and automatically sign in
       await signInWithEmailAndPassword(auth, values.email, values.password)

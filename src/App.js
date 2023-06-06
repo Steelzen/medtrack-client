@@ -18,6 +18,8 @@ import Advice from "./components/advice";
 import MainContent from "./components/mainContent";
 import Profile from "./components/profile";
 import ResetPassword from "./components/resetPassword";
+import Medication from "./components/medication";
+import Management from "./components/management";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -51,6 +53,9 @@ function App() {
             <Route index element={<MainContent />} />
             <Route path="advice" element={<Advice />} />
             <Route path="profile" element={<Profile />} />
+            <Route path="medication" element={<Medication />} />
+            <Route path="management/:patientID" element={<Management />} />
+            <Route exact path="management" element={<Management />} />
           </Route>
         </Routes>
       </div>
