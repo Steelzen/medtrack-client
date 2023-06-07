@@ -10,9 +10,8 @@ import Row from "react-bootstrap/Row";
 import * as formik from "formik";
 import { Field, ErrorMessage } from "formik";
 import * as yup from "yup";
-import moment from "moment";
 import validator from "validator";
-import getCookie from "../components/getCookie";
+import getCSRFHeader from "../common/csrfHeader";
 import axios from "axios";
 
 const SignUp = ({ db }) => {
@@ -125,18 +124,7 @@ const SignUp = ({ db }) => {
       const organisation = values.organisation;
       const patientListGroup = "patient_list";
 
-      // Get the CSRF token from the cookie
-      const csrftoken = getCookie("csrftoken");
-
-      // Add the CSRF token to the axios headers
-      axios.defaults.headers.common["X-CSRFToken"] = csrftoken;
-
-      const options = {
-        headers: {
-          "X-CSRFToken": csrftoken,
-        },
-        withCredentials: true,
-      };
+      const options = getCSRFHeader();
 
       // Add the user's license number to the "add_medistaff" endpoint
       const userEndPoint =

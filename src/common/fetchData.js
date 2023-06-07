@@ -1,5 +1,10 @@
 import axios from "axios";
 
+const fetchAllUser = async () => {
+  const result = await axios.get("http://localhost:4001/get_all_users/");
+  return result;
+};
+
 const fetchAllUserDoc = async () => {
   const result = [];
 
@@ -37,4 +42,9 @@ const fetchAllPatientDoc = async () => {
   return result.data.docs;
 };
 
-export { fetchAllUserDoc, fetachAllMedistaffDoc, fetchAllPatientDoc };
+export {
+  fetchAllUser,
+  fetchAllUserDoc,
+  fetachAllMedistaffDoc,
+  fetchAllPatientDoc,
+};

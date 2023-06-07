@@ -4,12 +4,14 @@ const MedicalHistory = (props) => {
   const { userID, fullName, dateOfBirth, contactInfo } = props;
   return (
     <div>
-      <h3>Medical History</h3>
       {userID === "" ? (
-        <div>Not Found</div>
+        <div>
+          <h4>Not Found</h4>
+        </div>
       ) : (
         <div>
           {" "}
+          <h3>Medical History</h3>
           <p>User ID: {userID}</p>
           <p>Full Name: {fullName}</p>
           <p>Date of Birth: {dateOfBirth}</p>
