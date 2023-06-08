@@ -96,6 +96,10 @@ p {
   margin-bottom: 10px;
 }
 
+.registered-patient-wrapper {
+  margin-top: 40px;
+}
+
 .user-table {
   width: 100%;
   border-collapse: collapse;

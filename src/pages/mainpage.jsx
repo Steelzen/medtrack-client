@@ -28,10 +28,6 @@ import create from "@ant-design/icons/lib/components/IconFont";
 
 const { Header, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
-const items1 = ["1", "2", "3"].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}));
 
 export const MainContext = createContext();
 

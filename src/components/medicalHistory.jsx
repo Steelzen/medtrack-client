@@ -1,10 +1,33 @@
 import React, { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
+import axios from "axios";
+import getCSRFHeader from "../common/csrfHeader";
+import {
+  fetchAllUser,
+  fetchAllUserDoc,
+  fetchPatientList,
+} from "../common/fetchData";
 
-const MedicalHistory = (props) => {
-  const { userID, fullName, dateOfBirth, contactInfo } = props;
+const MedicalHistory = () => {
+  const { patientID } = useParams();
+  const [profile, setProfile] = useState([]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const users = await fetchAllUserDoc();
+
+      users.forEach((user) => {
+        if (user["user_id"] === patientID) {
+          setProfile(user);
+        }
+      });
+    };
+    fetchAllUsers();
+  });
+
   return (
     <div>
-      {userID === "" ? (
+      {patientID === "" ? (
         <div>
           <h4>Not Found</h4>
         </div>
@@ -12,10 +35,9 @@ const MedicalHistory = (props) => {
         <div>
           {" "}
           <h3>Medical History</h3>
-          <p>User ID: {userID}</p>
-          <p>Full Name: {fullName}</p>
-          <p>Date of Birth: {dateOfBirth}</p>
-          <p>Contact Info: {contactInfo}</p>
+          <p>User ID: {patientID}</p>
+          <p>First Name: {profile["first_name"]}</p>
+          <p>Last Name: {profile["last_name"]}</p>
         </div>
       )}
     </div>

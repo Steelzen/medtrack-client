@@ -42,9 +42,18 @@ const fetchAllPatientDoc = async () => {
   return result.data.docs;
 };
 
+const fetchPatientList = async (userID) => {
+  const result = await axios.get(
+    `http://localhost:4001/register_patient_list/patient_list/${userID}/patient_list/`
+  );
+
+  return result.data;
+};
+
 export {
   fetchAllUser,
   fetchAllUserDoc,
   fetachAllMedistaffDoc,
   fetchAllPatientDoc,
+  fetchPatientList,
 };

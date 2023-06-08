@@ -1,23 +1,19 @@
 /** TODO: patient management **/
 import React, { useState, useEffect, useContext } from "react";
-import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import getCSRFHeader from "../common/csrfHeader";
-import { fetchAllUser, fetchAllUserDoc } from "../common/fetchData";
-import MedicalHistory from "./medicalHistory";
-import UsersTable from "./usersTable";
+import {
+  fetchAllUser,
+  fetchAllUserDoc,
+  fetchPatientList,
+} from "../common/fetchData";
 import { MainContext } from "../pages/mainpage";
+import { set } from "lodash";
 
 const Management = () => {
-  const { patientID } = useParams();
   const [users, setUsers] = useState([]);
-  const [userDoc, setUserDoc] = useState([]);
-  const [UID, setUID] = useState("");
-  const [fisrtName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [phone, setPhone] = useState("");
-  const [sortColumn, setSortColumn] = useState({ path: "name", order: "asc" });
+  const [patientRegistered, setPatientRegistered] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredUsers, setFilteredUsers] = useState([]);
 
@@ -26,38 +22,27 @@ const Management = () => {
   useEffect(() => {
     const fetchAllUsers = async () => {
       const users = await fetchAllUser();
-      console.log(users);
       setUsers(users);
     };
 
-    const fetchUserProfile = async () => {
-      let userDoc = [];
+    const fetchPatientRegistered = async () => {
+      const patientList = await fetchPatientList(userID);
+      const userDoc = await fetchAllUserDoc();
+      let patientRegistered = [];
 
-      try {
-        userDoc = await fetchAllUserDoc();
-        setUserDoc(userDoc);
-
+      patientList.patient_list.forEach((patient) => {
         userDoc.forEach((doc) => {
-          if (doc["user_id"] === patientID) {
-            setUID(doc["user_id"]);
-            setFirstName(doc["first_name"]);
-            setLastName(doc["last_name"]);
-            setDateOfBirth(doc["date_of_birth"]);
-            setPhone(doc["phone"]);
+          if (doc["user_id"] === patient) {
+            patientRegistered.push(doc);
+            setPatientRegistered(patientRegistered);
           }
         });
-      } catch (error) {
-        console.log(error);
-      }
+      });
     };
 
     fetchAllUsers();
-    fetchUserProfile();
+    fetchPatientRegistered();
   }, []);
-
-  const handleSort = (sortColumn) => {
-    setSortColumn(sortColumn);
-  };
 
   const handleSearch = (event) => {
     const searchValue = event.target.value.toLowerCase();
@@ -78,60 +63,81 @@ const Management = () => {
     console.log("Register:", user);
   };
 
+  const handleUnregister = async (patient) => {
+    // Logic to handle unregistration of the user
+    console.log("Unregister:", patient);
+  };
+
   return (
     <div>
       <h1>Management</h1>
-      {patientID ? (
-        <MedicalHistory
-          userID={UID}
-          fullName={fisrtName + " " + lastName}
-          dateOfBirth={dateOfBirth}
-          contactInfo={phone}
-        />
-      ) : (
-        <div className="management-container">
-          <div>
-            <label htmlFor="search">Search users</label>
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search by email"
-              value={searchQuery}
-              onChange={handleSearch}
-            />
-          </div>
-          {filteredUsers.length > 0 && (
-            <div className="search-result-wrapper">
-              <table className="user-table">
-                <thead>
-                  <tr>
-                    <th>Email</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredUsers.map((user) => (
-                    <tr key={user.uid}>
-                      <td>{user.email}</td>
-                      <td>
-                        <button onClick={() => handleRegister(user)}>
-                          Register
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          <UsersTable
-            users={userDoc}
-            sortColumn={sortColumn}
-            onSort={handleSort}
+      <div className="management-container">
+        <div>
+          <label htmlFor="search">Search users</label>
+          <input
+            className="search-input"
+            type="text"
+            placeholder="Search by email"
+            value={searchQuery}
+            onChange={handleSearch}
           />
         </div>
-      )}
+        {filteredUsers.length > 0 && (
+          <div className="search-result-wrapper">
+            <table className="user-table">
+              <thead>
+                <tr>
+                  <th>Email</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredUsers.map((user) => (
+                  <tr key={user.uid}>
+                    <td>{user.email}</td>
+                    <td>
+                      <button onClick={() => handleRegister(user)}>
+                        Register
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+        <div className="registered-patient-wrapper">
+          <h3>Registered Patients</h3>
+          <table className="user-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+                <th>Contact Info</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {patientRegistered.map((patient) => (
+                <tr key={patient["user_id"]}>
+                  <td>
+                    <Link to={`/home/management/${patient["user_id"]}/`}>
+                      {patient["first_name"] + " " + patient["last_name"]}
+                    </Link>
+                  </td>
+                  <td>{patient["date_of_birth"]}</td>
+                  <td>{patient["phone"]}</td>
+                  <td>
+                    <button onClick={() => handleUnregister(patient)}>
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 };
