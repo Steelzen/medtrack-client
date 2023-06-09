@@ -1,58 +1,43 @@
-// TODO: Medcal history
 import React, { useState, useEffect } from "react";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { useParams, Link } from "react-router-dom";
 import { Table, Collapse, Button } from "react-bootstrap";
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
+import getCSRFHeader from "../common/csrfHeader";
 import { fetchMedicationList } from "../common/fetchData";
+import validator from "validator";
 import { Base64 } from "js-base64";
 
-const Medication = () => {
-  const [userID, setUserID] = useState("");
+const MedicalHistoryTable = (props) => {
+  const { patientID, addStatus } = props;
   const [medicationList, setMedicationList] = useState([]);
   const [activeCollapseId, setActiveCollapseId] = useState(null);
-  let auth = getAuth();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        auth = await getAuth();
-        await new Promise((resolve, reject) => {
-          const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-              setUserID(user.uid);
-            } else {
-              setUserID("");
-            }
-            resolve(); // Resolve the Promise once the auth state has been handled
-          });
-          unsubscribe();
-        });
+    const fetchMedication = async () => {
+      const medications = await fetchMedicationList();
+      let medicationList = [];
+      medications.forEach((medication) => {
+        if (medication["patient_id"] === patientID) {
+          medicationList.push(medication);
+        }
+      });
 
-        const medications = await fetchMedicationList();
-
-        let medicationList = [];
-        medications.forEach((medication) => {
-          if (medication["patient_id"] === auth.currentUser.uid) {
-            medicationList.push(medication);
-          }
-        });
-
-        setMedicationList(medicationList);
-      } catch (error) {
-        console.log(error);
-      }
+      setMedicationList(medicationList);
+      console.log(medicationList);
     };
-
-    fetchData();
-  }, []);
+    fetchMedication();
+  }, [addStatus]);
 
   const handleCollapseToggle = (medicationId) => {
     setActiveCollapseId(
       activeCollapseId === medicationId ? null : medicationId
     );
   };
+
   return (
     <div>
-      <h1>Medication History</h1>
       <Table striped bordered>
         <thead>
           <tr>
@@ -110,4 +95,4 @@ const Medication = () => {
   );
 };
 
-export default Medication;
+export default MedicalHistoryTable;

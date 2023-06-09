@@ -1,10 +1,11 @@
+import React, { useState, useEffect } from "react";
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { Form, Button } from "react-bootstrap";
+import { Form, Button, Alert } from "react-bootstrap";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import * as formik from "formik";
@@ -13,8 +14,10 @@ import * as yup from "yup";
 import validator from "validator";
 import getCSRFHeader from "../common/csrfHeader";
 import axios from "axios";
+import MedTrackLogo from "../images/MedTrack_Logo.png";
 
 const SignUp = ({ db }) => {
+  const [error, setError] = useState(null);
   const { Formik } = formik;
   const schema = yup.object().shape({
     position: yup.string().required("Position is required"),
@@ -161,12 +164,19 @@ const SignUp = ({ db }) => {
     } catch (error) {
       // Handle sign-up error
       console.log(error);
+      setError(error.message);
     }
   };
 
   return (
     <div className="signup-wrapper">
-      <h1>Sign Up</h1>
+      <div className="logo" theme="dark">
+        <img className="logo-img" src={MedTrackLogo} alt="logo" />
+      </div>
+      <div className="signup-title-wrapper">
+        <h1>Sign Up</h1>
+      </div>
+      {error && <Alert variant="danger">{error}</Alert>}
       <Formik
         validationSchema={schema}
         onSubmit={handleSignUp}
@@ -191,20 +201,21 @@ const SignUp = ({ db }) => {
       >
         {({ handleSubmit, touched, errors, values }) => (
           <Form noValidate onSubmit={handleSubmit}>
-            <Row className="mb-3">
-              <Form.Group
-                as={Col}
-                md="4"
-                controlId="validationFormik101"
-                className="position-relative"
-              >
-                <Form.Label>Position </Form.Label>
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik101"
+            >
+              <Form.Label column md="4">
+                Position
+              </Form.Label>
+              <Col md="8">
                 <Field
                   name="position"
                   as="select"
-                  className={
+                  className={`form-select ${
                     touched.position && errors.position ? "is-invalid" : ""
-                  }
+                  }`}
                 >
                   <option value="">Choose your position</option>
                   <option value="patient">Patient</option>
@@ -215,224 +226,410 @@ const SignUp = ({ db }) => {
                   component="div"
                   className="invalid-feedback"
                 />
-              </Form.Group>
-            </Row>
-            <Form.Label>Email </Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter your email"
-              as={Field}
-              name="email"
-              className={touched.email && errors.email ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="email"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Label>Password </Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Enter your password"
-              as={Field}
-              name="password"
-              className={
-                touched.password && errors.password ? "is-invalid" : ""
-              }
-            />
-            <ErrorMessage
-              name="password"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Label>Password confirm </Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Confirm your password"
-              as={Field}
-              name="passwordConfirm"
-              className={
-                touched.passwordConfirm && errors.passwordConfirm
-                  ? "is-invalid"
-                  : ""
-              }
-            />
-            <ErrorMessage
-              name="passwordConfirm"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your first name"
-              as={Field}
-              name="firstName"
-              className={
-                touched.firstName && errors.firstName ? "is-invalid" : ""
-              }
-            />
-            <ErrorMessage
-              name="firstName"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your last name"
-              as={Field}
-              name="lastName"
-              className={
-                touched.lastName && errors.lastName ? "is-invalid" : ""
-              }
-            />
-            <ErrorMessage
-              name="lastName"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Label>Date of Birth</Form.Label>
-            <Form.Control
-              type="date"
-              placeholder="Enter your date of birth"
-              as={Field}
-              name="dateOfBirth"
-              className={
-                touched.dateOfBirth && errors.dateOfBirth ? "is-invalid" : ""
-              }
-            />
-            <ErrorMessage
-              name="dateOfBirth"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your address"
-              as={Field}
-              name="address"
-              className={touched.address && errors.address ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="address"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your city"
-              as={Field}
-              name="city"
-              className={touched.city && errors.city ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="city"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your state"
-              as={Field}
-              name="state"
-              className={touched.state && errors.state ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="state"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your zip code"
-              as={Field}
-              name="zip"
-              className={touched.zip && errors.zip ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="zip"
-              component="div"
-              className="invalid-feedback"
-            />
-            <Form.Control
-              type="text"
-              placeholder="Enter your phone number"
-              as={Field}
-              name="phone"
-              className={touched.phone && errors.phone ? "is-invalid" : ""}
-            />
-            <ErrorMessage
-              name="phone"
-              component="div"
-              className="invalid-feedback"
-            />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik102"
+            >
+              <Form.Label column md="4">
+                Email
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your email"
+                  as={Field}
+                  name="email"
+                  className={`${
+                    touched.email && errors.email ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik103"
+            >
+              <Form.Label column md="4">
+                Password
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="password"
+                  placeholder="Enter your password"
+                  as={Field}
+                  name="password"
+                  className={`${
+                    touched.password && errors.password ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik104"
+            >
+              <Form.Label column md="4">
+                Password confirm
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="password"
+                  placeholder="Confirm your password"
+                  as={Field}
+                  name="passwordConfirm"
+                  className={`${
+                    touched.passwordConfirm && errors.passwordConfirm
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="passwordConfirm"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik105"
+            >
+              <Form.Label column md="4">
+                First Name
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your first name"
+                  as={Field}
+                  name="firstName"
+                  className={`${
+                    touched.firstName && errors.firstName ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="firstName"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik106"
+            >
+              <Form.Label column md="4">
+                Last Name
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your last name"
+                  as={Field}
+                  name="lastName"
+                  className={`${
+                    touched.lastName && errors.lastName ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="lastName"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik107"
+            >
+              <Form.Label column md="4">
+                Date of Birth
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="date"
+                  placeholder="Enter your date of birth"
+                  as={Field}
+                  name="dateOfBirth"
+                  className={`${
+                    touched.dateOfBirth && errors.dateOfBirth
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="dateOfBirth"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik108"
+            >
+              <Form.Label column md="4">
+                Address
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your address"
+                  as={Field}
+                  name="address"
+                  className={`${
+                    touched.address && errors.address ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="address"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik109"
+            >
+              <Form.Label column md="4">
+                City
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your city"
+                  as={Field}
+                  name="city"
+                  className={`${
+                    touched.city && errors.city ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="city"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik110"
+            >
+              <Form.Label column md="4">
+                State
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your state"
+                  as={Field}
+                  name="state"
+                  className={`${
+                    touched.state && errors.state ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="state"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik111"
+            >
+              <Form.Label column md="4">
+                Zip
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your zip code"
+                  as={Field}
+                  name="zip"
+                  className={`${touched.zip && errors.zip ? "is-invalid" : ""}`}
+                />
+                <ErrorMessage
+                  name="zip"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
+            <Form.Group
+              as={Row}
+              className="mb-3"
+              controlId="validationFormik112"
+            >
+              <Form.Label column md="4">
+                Phone
+              </Form.Label>
+              <Col md="8">
+                <Form.Control
+                  type="text"
+                  placeholder="Enter your phone number"
+                  as={Field}
+                  name="phone"
+                  className={`${
+                    touched.phone && errors.phone ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="phone"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Form.Group>
+
             {values.position === "medistaff" && (
               <>
-                <Form.Group controlId="role">
-                  <Field
-                    name="role"
-                    as="select"
-                    className={touched.role && errors.role ? "is-invalid" : ""}
-                  >
-                    <option value="">Choose your role</option>
-                    <option value="physician">Physician</option>
-                    <option value="dentist">Dentist</option>
-                    <option value="pharmacist">Pharmacist</option>
-                    <option value="nurse">Nurse</option>
-                    <option value="other">Other</option>
-                  </Field>
-                  <ErrorMessage
-                    name="role"
-                    component="div"
-                    className="invalid-feedback"
-                  />
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="validationFormik113"
+                >
+                  <Form.Label column md="4">
+                    Role
+                  </Form.Label>
+                  <Col md="8">
+                    <Field
+                      name="role"
+                      as="select"
+                      className={`form-select ${
+                        touched.role && errors.role ? "is-invalid" : ""
+                      }`}
+                    >
+                      <option value="">Choose your role</option>
+                      <option value="physician">Physician</option>
+                      <option value="dentist">Dentist</option>
+                      <option value="pharmacist">Pharmacist</option>
+                      <option value="nurse">Nurse</option>
+                      <option value="other">Other</option>
+                    </Field>
+                    <ErrorMessage
+                      name="role"
+                      component="div"
+                      className="invalid-feedback"
+                    />
+                  </Col>
                 </Form.Group>
-                <Form.Control
-                  type="text"
-                  placeholder="Enter your license number"
-                  as={Field}
-                  name="licenseNumber"
-                  className={
-                    touched.licenseNumber && errors.licenseNumber
-                      ? "is-invalid"
-                      : ""
-                  }
-                />
-                <ErrorMessage
-                  name="licenseNumber"
-                  component="div"
-                  className="invalid-feedback"
-                />
-                <Form.Control
-                  type="text"
-                  placeholder="Enter your clinic/hospital/pharmacy name"
-                  as={Field}
-                  name="organisation"
-                  className={
-                    touched.organisation && errors.organisation
-                      ? "is-invalid"
-                      : ""
-                  }
-                />
-                <ErrorMessage
-                  name="organisation"
-                  component="div"
-                  className="invalid-feedback"
-                />
+
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="validationFormik114"
+                >
+                  <Form.Label column md="4">
+                    License Number
+                  </Form.Label>
+                  <Col md="8">
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter your license number"
+                      as={Field}
+                      name="licenseNumber"
+                      className={`${
+                        touched.licenseNumber && errors.licenseNumber
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="licenseNumber"
+                      component="div"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                </Form.Group>
+
+                <Form.Group
+                  as={Row}
+                  className="mb-3"
+                  controlId="validationFormik115"
+                >
+                  <Form.Label column md="4">
+                    Organization
+                  </Form.Label>
+                  <Col md="8">
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter your clinic/hospital/pharmacy name"
+                      as={Field}
+                      name="organisation"
+                      className={`${
+                        touched.organisation && errors.organisation
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="organisation"
+                      component="div"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                </Form.Group>
               </>
             )}
-            <Form.Group className="mb-3">
-              <Form.Check
-                required
-                name="terms"
-                label="Agree to terms and conditions"
-                as={Field}
-                type="checkbox"
-                id="validationFormik0"
-                isInvalid={touched.terms && !!errors.terms}
-                feedback={errors.terms}
-                feedbackType="invalid"
-              />
+
+            <Form.Group as={Row} className="mb-3">
+              <Col sm={{ span: 8, offset: 4 }}>
+                <Form.Check
+                  required
+                  name="terms"
+                  id="terms"
+                  as={Field}
+                  type="checkbox"
+                  label="Agree to terms and conditions"
+                  feedbackType="invalid"
+                  isInvalid={touched.terms && !!errors.terms}
+                  className="mb-0"
+                />
+                {/* Render the error message for the checkbox */}
+                <ErrorMessage
+                  name="terms"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </Col>
             </Form.Group>
+
             <Button
               variant="outline-secondary"
               id="button-addon2"

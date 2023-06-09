@@ -50,10 +50,19 @@ const fetchPatientList = async (userID) => {
   return result.data;
 };
 
+const fetchMedicationList = async () => {
+  const result = await axios.get(
+    "http://localhost:4001/get_document_all/medication/"
+  );
+
+  return result.data.docs;
+};
+
 export {
   fetchAllUser,
   fetchAllUserDoc,
   fetachAllMedistaffDoc,
   fetchAllPatientDoc,
   fetchPatientList,
+  fetchMedicationList,
 };

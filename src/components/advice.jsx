@@ -48,7 +48,7 @@ const Advice = () => {
               <QuestionCircleOutlined />
             </h4>
             <div className="mt-3">
-              <p>{inputRef.current}</p>
+              <p className="advice-content">{inputRef.current}</p>
             </div>
           </div>
         )}
@@ -65,7 +65,7 @@ const Advice = () => {
                 <CheckCircleOutlined />
               </h4>
               <div className="mt-3">
-                <p>{output}</p>
+                <p className="advice-content">{output}</p>
               </div>
             </div>
           )

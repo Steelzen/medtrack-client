@@ -1,12 +1,13 @@
+import React, { useState, useEffect } from "react";
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
 } from "firebase/auth";
-import { Form, Button } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { Form, Button, Alert, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import validator from "validator";
+import MedTrackLogo from "../images/MedTrack_Logo.png";
 
 const Login = () => {
   const [position, setPosition] = useState("");
@@ -14,9 +15,9 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [loginError, setLoginError] = useState("");
 
   let auth = getAuth();
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,8 +29,6 @@ const Login = () => {
           // User is logged in, stay on the home page
           // You can perform any additional actions or set states here
           navigate("/home");
-        } else {
-          // User is not logged in, redirect to the login page
         }
       });
     };
@@ -59,79 +58,78 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login");
 
     if (validateForm()) {
       try {
-        await signInWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed ins
-            const user = userCredential.user;
-            // ...
-            navigate("/home");
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-          });
+        await signInWithEmailAndPassword(auth, email, password);
+        navigate("/home");
       } catch (error) {
-        console.log(error);
+        const errorMessage = error.message;
+        setLoginError(errorMessage);
       }
     }
   };
 
   return (
-    <div>
-      <h1>Login</h1>
+    <Container className="mt-4">
+      <div className="logo" theme="dark">
+        <img className="logo-img" src={MedTrackLogo} alt="logo" />
+      </div>
+      <h3 className="text-center">Welcome to MedTrack...</h3>
+      <br />
+      {loginError && <Alert variant="danger">{loginError}</Alert>}
       <Form onSubmit={handleLogin}>
-        <Form.Select
-          aria-label="Default select example"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-        >
-          <option>Choose your position</option>
-          <option value="patient">Patient</option>
-          <option value="medistaff">Healthcare Worker</option>
-        </Form.Select>
-        <Form.Control
-          type="text"
-          placeholder="Enter your email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          name="email"
-          isInvalid={!!emailError}
-        />
-        <Form.Control.Feedback type="invalid">
-          {emailError}
-        </Form.Control.Feedback>
-        <Form.Control
-          type="password"
-          placeholder="Enter your password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          name="password"
-          isInvalid={!!passwordError}
-        />
-        <Form.Control.Feedback type="invalid">
-          {passwordError}
-        </Form.Control.Feedback>
-        <Link to="/reset-password">Forget password?</Link>
-        <Button variant="outline-secondary" id="button-addon2" type="submit">
-          Enter
-        </Button>
-        <p> Are you new? </p>
-        <Button
-          as={Link}
-          to="/signup"
-          variant="outline-secondary"
-          id="button-addon2"
-          type="button"
-        >
-          Sign Up
-        </Button>
+        <Form.Group controlId="position">
+          <Form.Label>Choose your position</Form.Label>
+          <Form.Control
+            as="select"
+            value={position}
+            onChange={(e) => setPosition(e.target.value)}
+          >
+            <option value="">Choose...</option>
+            <option value="patient">Patient</option>
+            <option value="medistaff">Healthcare Worker</option>
+          </Form.Control>
+        </Form.Group>
+        <Form.Group controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="text"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            isInvalid={!!emailError}
+          />
+          <Form.Control.Feedback type="invalid">
+            {emailError}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            isInvalid={!!passwordError}
+          />
+          <Form.Control.Feedback type="invalid">
+            {passwordError}
+          </Form.Control.Feedback>
+        </Form.Group>
+        <div className="d-flex justify-content-between align-items-center">
+          <div>
+            <Link to="/reset-password">Forgot password?</Link>
+          </div>
+          <Button className="login-button" variant="primary" type="submit">
+            Login
+          </Button>
+        </div>
       </Form>
-    </div>
+      <p className="text-center mt-3">
+        New user? <Link to="/signup">Sign Up</Link>
+      </p>
+    </Container>
   );
 };
 

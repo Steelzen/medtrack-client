@@ -1,4 +1,3 @@
-/** TODO: patient management **/
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -9,7 +8,6 @@ import {
   fetchPatientList,
 } from "../common/fetchData";
 import { MainContext } from "../pages/mainpage";
-import { set } from "lodash";
 
 const Management = () => {
   const [users, setUsers] = useState([]);
@@ -34,10 +32,11 @@ const Management = () => {
         userDoc.forEach((doc) => {
           if (doc["user_id"] === patient) {
             patientRegistered.push(doc);
-            setPatientRegistered(patientRegistered);
           }
         });
       });
+
+      setPatientRegistered(patientRegistered);
     };
 
     fetchAllUsers();
@@ -54,6 +53,17 @@ const Management = () => {
   };
 
   const handleRegister = async (user) => {
+    // Check if the user is already registered
+    const isRegistered = patientRegistered.some(
+      (patient) => patient.user_id === user.uid
+    );
+
+    if (isRegistered) {
+      // User is already registered, show an error message or perform any necessary action
+      console.log("User is already registered");
+      return;
+    }
+
     // Logic to handle registration of the user
     const endPoint = `http://localhost:4001/register_patient_list/patient_list/${userID}/add_patient_on_list/${user.uid}/`;
     const options = await getCSRFHeader();
@@ -61,11 +71,39 @@ const Management = () => {
     await axios.post(endPoint, {}, options);
 
     console.log("Register:", user);
+
+    // Update the patientRegistered state by fetching the updated list of registered patients
+    const updatedPatientList = await fetchPatientList(userID);
+    const userDoc = await fetchAllUserDoc();
+
+    let updatedPatientRegistered = [];
+
+    updatedPatientList.patient_list.forEach((patient) => {
+      userDoc.forEach((doc) => {
+        if (doc["user_id"] === patient) {
+          updatedPatientRegistered.push(doc);
+        }
+      });
+    });
+
+    setPatientRegistered(updatedPatientRegistered);
   };
 
   const handleUnregister = async (patient) => {
     // Logic to handle unregistration of the user
+    const endPoint = `http://localhost:4001/register_patient_list/patient_list/${userID}/delete_patient_on_list/${patient["user_id"]}/`;
+    const options = await getCSRFHeader();
+
+    await axios.post(endPoint, {}, options);
+
     console.log("Unregister:", patient);
+
+    // Update the patientRegistered state by filtering out the removed patient
+    const updatedPatientRegistered = patientRegistered.filter(
+      (registered) => registered["user_id"] !== patient["user_id"]
+    );
+
+    setPatientRegistered(updatedPatientRegistered);
   };
 
   return (

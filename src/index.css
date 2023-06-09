@@ -18,7 +18,7 @@ a {
 
 p {
   text-align: left;
-  font-size: 12;
+  font-size: 14;
 }
 
 .logo-container {
@@ -68,6 +68,33 @@ p {
 .col-right {
   display: flex;
   justify-content: flex-end;
+}
+
+/* Login Page */
+.login-button {
+  margin-top: 10px;
+}
+
+/* Sign up page */
+.signup-wrapper {
+  padding: 20px 100px 20px 100px;
+}
+
+.signup-title-wrapper {
+  margin-bottom: 20px;
+}
+
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-input {
+  margin-right: 5px; /* Adjust the spacing between the checkbox and label */
+}
+
+.checkbox-label {
+  margin-bottom: 0;
 }
 
 /* Main page */
@@ -125,6 +152,14 @@ p {
   background-color: #d9dadc;
   border: none;
   cursor: pointer;
+}
+.name-container {
+  text-align: right;
+}
+
+.p-3 {
+  background-color: rgb(241, 239, 239);
+  margin-bottom: 10px;
 }
 
 /* Advice page */
@@ -187,6 +222,9 @@ p {
 
 .output-generated-wrapper > div {
   margin: 0 10px;
+}
+.advice-content {
+  font-size: large;
 }
 
 /* // Small devices (landscape phones, 576px and above till next break point) */
