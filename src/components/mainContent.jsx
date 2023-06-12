@@ -1,9 +1,6 @@
-import { getAuth } from "firebase/auth";
-import firebase from "firebase/compat/app";
 import { useState, useEffect, useContext } from "react";
 import { Layout, Breadcrumb, Spin, Empty } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
-import axios from "axios";
 import MedTrackLogo from "../images/MedTrack_Logo3.png";
 import { MainContext } from "../pages/mainpage";
 

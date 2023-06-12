@@ -56,7 +56,11 @@ const Advice = () => {
       <div className="output-container">
         {loading ? (
           <div className="mt-5 text-center spin-output-wrapper">
-            <Spin />
+            <div className="spinner-wrapper">
+              <div className="spinner">
+                <Spin />
+              </div>
+            </div>
           </div>
         ) : (
           output && (
